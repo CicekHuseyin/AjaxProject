@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+<button type="button" id="btnlist" class="btn btn-primary">Personel Listesi</button>
+<button type="button" id="btnadd" class="btn btn-info">Personel Ekle</button>
+<button type="button" id="btndelete" class="btn btn-danger">Personel Sil</button>
+<button type="button" id="btnget" class="btn btn-dark">Personel Getir</button>
+<button type="button" id="btnupdate" class="btn btn-success">Personel Güncelle</button>
+
+<br />
+
+<div id="employeelist">
+</div>
+<br />
+
+<div>
+    <h3>Ürün Ekleme Bölümü</h3>
+    <input type="text" id="txtname" class="form-control" placeholder="Personel Adı" />
+    <br />
+    <input type="text" id="txtsurname" class="form-control" placeholder="Personel Soyadı" />
+    <br />
+    <input type="text" id="txtcity" class="form-control" placeholder="Personel Şehri" />
+    <br />
+</div>
+<br />
+<div>
+    <input type="text" class="form-control" placeholder="Silinecek ID değerini gir." id="txtdeletedid" />
+</div>
+<script>
+    $("#btnlist").click(function () {
+        $.ajax({
+            contentType: "application/json",
+            dataType: "json",
+            type: "Get",
+            url: "/Employee/EmployeeList/",
+            success: function (func1) {
+                let v = JSON.parse(func1);
+                console.log(v);
+            }
+        });
+    });
+
+   //$("#btnadd").click(function () {
+   //     let empvalues =
+   //     {
+   //         EmployeeName: $("#txtname").val(),
+   //         EmployeeSurName: $("#txtsurname").val(),
+   //         EmployeeCity: $("#city").val()
+   //     };
+
+   //     $.ajax({
+   //         type: "post",
+   //         url: "/Employee/AddEmployee/",
+   //         data: empvalues,
+   //         success: function (func2) {
+   //             let result = jQuery.parseJSON(func2);
+   //             alert("Personel başarılı bir şekilde eklendi.");
+   //         }
+   //     });
+   // });
+
+    $("#btndelete").click(function () {
+        let id = $("#txtdeletedid").val();
+        $.ajax({
+            //url: "Employee/DeleteEmployee/" + id,
+            url: '@Url.Action("DeleteEmployee", "Employee")/' +id,
+            type: "post",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (func3) {
+                alert("Personel Silindi");
+            }
+        });
+    });
+
+</script>
+
+
