@@ -43,30 +43,31 @@
         });
     });
 
-   //$("#btnadd").click(function () {
-   //     let empvalues =
-   //     {
-   //         EmployeeName: $("#txtname").val(),
-   //         EmployeeSurName: $("#txtsurname").val(),
-   //         EmployeeCity: $("#city").val()
-   //     };
+    $("#btnadd").click(function () {
+        let empvalues =
+        {
+            EmployeeName: $("#txtname").val(),
+            EmployeeSurName: $("#txtsurname").val(),
+            EmployeeCity: $("#city").val()
+        };
 
-   //     $.ajax({
-   //         type: "post",
-   //         url: "/Employee/AddEmployee/",
-   //         data: empvalues,
-   //         success: function (func2) {
-   //             let result = jQuery.parseJSON(func2);
-   //             alert("Personel başarılı bir şekilde eklendi.");
-   //         }
-   //     });
-   // });
+        $.ajax({
+            type: "post",
+            url: "/Employee/AddEmployee/",
+            data: JSON.stringify(empvalues), // Veriyi JSON formatına çeviriyoruz.
+            contentType: "application/json; charset=utf-8", // JSON formatında veri gönderildiğini belirtiyoruz.
+            dataType: "json",
+            success: function (func2) {
+                alert("Personel başarılı bir şekilde eklendi.");
+            }
+        });
+    });
 
     $("#btndelete").click(function () {
         let id = $("#txtdeletedid").val();
         $.ajax({
             //url: "Employee/DeleteEmployee/" + id,
-            url: '@Url.Action("DeleteEmployee", "Employee")/' +id,
+            url: '@Url.Action("DeleteEmployee", "Employee")/' + id,
             type: "post",
             contentType: "application/json",
             dataType: "json",

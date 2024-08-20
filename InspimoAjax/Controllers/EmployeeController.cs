@@ -1,5 +1,6 @@
 ﻿using InspimoAjax.DAL;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace InspimoAjax.Controllers
@@ -25,10 +26,29 @@ namespace InspimoAjax.Controllers
         [HttpPost]
         public IActionResult AddEmployee(Employee employee)
         {
-            _context.Employees.Add(employee);
-            _context.SaveChanges();
-            var values = JsonConvert.SerializeObject(employee);
-            return Json(values);
+            try
+            {
+                _context.Employees.Add(employee);
+                _context.SaveChanges();
+                var values = JsonConvert.SerializeObject(employee);
+                return Json(values);
+            }
+            catch (DbUpdateException ex)
+            {
+
+                var innerException = ex.InnerException?.Message;
+                Console.WriteLine(innerException);
+
+                // Hata mesajını JSON formatında döndürün
+                return Json(new { error = innerException });
+            }
+            catch (Exception ex)
+            {
+                // Diğer olası hataları yakalayın ve loglayın
+                Console.WriteLine($"General Exception: {ex.Message}");
+                return Json(new { error = ex.Message });
+            }
+
         }
         public IActionResult DeleteEmployee(int id)
         {
