@@ -3,6 +3,8 @@
 }
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 
 <button type="button" id="btnlist" class="btn btn-primary">Personel Listesi</button>
 <button type="button" id="btnadd" class="btn btn-info">Personel Ekle</button>
@@ -29,6 +31,21 @@
 <div>
     <input type="text" class="form-control" placeholder="Silinecek ID değerini gir." id="txtdeletedid" />
 </div>
+
+<div>
+        <h3>Müşteri Güncelleme Paneli</h3>
+        <br />
+        <input type="text" class="form-control" id="txteditemployeeid" placeholder="Güncellenecek ID Değeri" />
+        <br />
+        <input type="text" class="form-control" id="txteditemployeename" placeholder="Güncellenecek Ad Değeri" />
+        <br />
+    <input type="text" class="form-control" id="txteditemployeesurname" placeholder="Güncellenecek Soyad Değeri" />
+        <br />
+    <input type="text" class="form-control" id="txteditemployeecity" placeholder="Güncellenecek Şehir Değeri" />
+
+        <br />
+        <hr />
+    </div>
 <script>
     $("#btnlist").click(function () {
         $.ajax({
@@ -44,35 +61,48 @@
     });
 
     $("#btnadd").click(function () {
-        let empvalues =
-        {
+        let values = {
             EmployeeName: $("#txtname").val(),
             EmployeeSurName: $("#txtsurname").val(),
-            EmployeeCity: $("#city").val()
+            EmployeeCity: $("#txtcity").val()
         };
-
         $.ajax({
-            type: "post",
+            type: "Post",
             url: "/Employee/AddEmployee/",
-            data: JSON.stringify(empvalues), // Veriyi JSON formatına çeviriyoruz.
-            contentType: "application/json; charset=utf-8", // JSON formatında veri gönderildiğini belirtiyoruz.
-            dataType: "json",
-            success: function (func2) {
-                alert("Personel başarılı bir şekilde eklendi.");
+            data: values,
+            success: function (funk2) {
+                let result = jQuery.parseJSON(funk2);
+                swal("Bravo, tebrikler!", "Müşteri Başarılı Bir Şekilde Eklendi!", "success");
             }
         });
     });
 
     $("#btndelete").click(function () {
         let id = $("#txtdeletedid").val();
+            $.ajax({
+                type: "Get",
+                url: "/Employee/DeleteEmployee/" + id,
+                contentType: "application/json",
+                dataType: "json",
+                success: function (funk3) {
+                    alert("Müşteri Başarılı Bir Şekilde Silindi.");
+                }
+            });
+    });
+
+    $("#btnupdate").click(function () {
+        let values = {
+            EmployeeID: $("#txteditemployeeid").val(),
+            EmployeeName: $("#txteditemployeename").val(),
+            EmployeeSurName: $("#txteditemployeesurname").val(),
+            EmployeeCity: $("#txteditemployeecity").val()
+        };
         $.ajax({
-            //url: "Employee/DeleteEmployee/" + id,
-            url: '@Url.Action("DeleteEmployee", "Employee")/' + id,
             type: "post",
-            contentType: "application/json",
-            dataType: "json",
-            success: function (func3) {
-                alert("Personel Silindi");
+            url: "/Employee/UpdateEmployee/",
+            data: values,
+            success: function (funk5) {
+                swal("Bravo, tebrikler!", "Veriler Güncellendi!", "success");
             }
         });
     });

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace InspimoAjax.Controllers
 {
@@ -23,32 +24,13 @@ namespace InspimoAjax.Controllers
             var values = JsonConvert.SerializeObject(_context.Employees.ToList());
             return Json(values);
         }
-        [HttpPost]
+        [HttpPost]     
         public IActionResult AddEmployee(Employee employee)
         {
-            try
-            {
-                _context.Employees.Add(employee);
-                _context.SaveChanges();
-                var values = JsonConvert.SerializeObject(employee);
-                return Json(values);
-            }
-            catch (DbUpdateException ex)
-            {
-
-                var innerException = ex.InnerException?.Message;
-                Console.WriteLine(innerException);
-
-                // Hata mesajını JSON formatında döndürün
-                return Json(new { error = innerException });
-            }
-            catch (Exception ex)
-            {
-                // Diğer olası hataları yakalayın ve loglayın
-                Console.WriteLine($"General Exception: {ex.Message}");
-                return Json(new { error = ex.Message });
-            }
-
+            _context.Employees.Add(employee);
+            var values = JsonConvert.SerializeObject(employee);
+            _context.SaveChanges();
+            return Json(values);
         }
         public IActionResult DeleteEmployee(int id)
         {
@@ -56,6 +38,13 @@ namespace InspimoAjax.Controllers
             _context.Employees.Remove(values);
             _context.SaveChanges();
             return NoContent();
+        }
+        public IActionResult UpdateEmployee(Employee employee)
+        {
+            _context.Employees.Update(employee);
+            var values = JsonConvert.SerializeObject(employee);
+            _context.SaveChanges();
+            return Json(values);
         }
     }
 }
